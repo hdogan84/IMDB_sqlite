@@ -41,17 +41,17 @@ def main():
     if conn is not None:
         # Example SELECT queries
 
-        # 1. Select artists names from Artists table
+        # 1. Select distinct names from People table
         query = "SELECT DISTINCT name FROM people LIMIT 10;"    
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
-        # 1. Select artists names from Artists table
+        # 2. Select names from People
         query = "SELECT * FROM people LIMIT 10;"    
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
-        # 1. Select artists names from Artists table
+        # 3. Select ratings, crew and titles for display
         query = "SELECT * FROM ratings LIMIT 10;"    
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
@@ -62,16 +62,14 @@ def main():
 
         query = "SELECT * FROM titles LIMIT 10;"    
         rows = execute_select_query(conn, query)
-        print_query_results(query, rows)
+        print_query_results(query, rows) 
 
-        #break 
-
-        # 2. Select Genre descriptions
-
+        # 4. Select titles according to types
         query = "SELECT type, COUNT(DISTINCT title_id) FROM titles GROUP BY type ORDER BY type;"    
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
+        # 5. Select best rated movies  
         query = """SELECT T.primary_title, R.rating, R.votes as numVotes
                 FROM titles AS T
                 JOIN ratings AS R ON T.title_id = R.title_id
@@ -81,7 +79,7 @@ def main():
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
-        #select most popular 10 genre
+        #6. select most popular 10 genre
         query = """SELECT T.genres,  AVG(R.rating) as avgRating
             FROM titles AS T
             JOIN ratings AS R ON T.title_id = R.title_id
@@ -91,7 +89,7 @@ def main():
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
-        #select most popular 
+        #7. select most popular directors
         query = """SELECT C.job,  AVG(R.rating) as avgRating
             FROM crew AS C
             JOIN ratings AS R ON C.title_id = R.title_id
@@ -102,7 +100,7 @@ def main():
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
-        #select most popular 10 genre
+        #8. select Tarantino movies
         query = """SELECT *
             FROM people 
             WHERE name LIKE '%Taran%'
@@ -110,20 +108,20 @@ def main():
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
-        #select most popular 10 genre
+        #9. select most popular Tarantino movies
         query = """SELECT P.name, T.original_title,  R.rating
             FROM titles AS T
             JOIN ratings AS R ON T.title_id = R.title_id
             JOIN crew AS C ON T.title_id = C.title_id
             JOIN people AS P ON C.person_id = P.person_id
-            WHERE P.name LIKE '%ara%'
+            WHERE P.name LIKE '%Tarantino%'
             ORDER BY R.rating DESC
             LIMIT 10;"""    
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
   
 
-        #select most popular 10 genre
+        #10. select most popular actor and actress
         query = """SELECT P.name,  R.rating
             FROM people AS P
             JOIN crew AS C ON C.person_id = P.person_id
@@ -134,7 +132,7 @@ def main():
         rows = execute_select_query(conn, query)
         print_query_results(query, rows)
 
-        #select most popular 10 genre
+        #11. Calculate average ratings for actors and actresses 
         query = """SELECT C.category,  AVG(R.rating) as avgRating
             FROM crew AS C
             JOIN ratings AS R ON C.title_id = R.title_id
